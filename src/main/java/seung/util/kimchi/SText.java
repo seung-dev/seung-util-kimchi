@@ -1,8 +1,9 @@
-package seung.util.java;
+package seung.util.kimchi;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.Random;
 import java.util.UUID;
 
@@ -31,6 +32,10 @@ public class SText {
 
 	public SText() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public static String to_text(byte[] data, Charset charset) {
+		return new String(data, charset);
 	}
 	
 	/**

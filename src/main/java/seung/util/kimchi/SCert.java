@@ -1,4 +1,4 @@
-package seung.util.java;
+package seung.util.kimchi;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -74,8 +74,8 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 
 import lombok.extern.slf4j.Slf4j;
-import seung.util.java.type.SSignPriKey;
-import seung.util.java.type.SSignCertDer;
+import seung.util.kimchi.type.SSignCertDer;
+import seung.util.kimchi.type.SSignPriKey;
 
 @Slf4j
 public class SCert {

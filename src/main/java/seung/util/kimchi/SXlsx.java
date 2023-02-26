@@ -1,4 +1,4 @@
-package seung.util.java;
+package seung.util.kimchi;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -20,11 +20,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import lombok.extern.slf4j.Slf4j;
-import seung.util.java.type.SLinkedHashMap;
-import seung.util.java.type.excel.SCell;
-import seung.util.java.type.excel.SExcel;
-import seung.util.java.type.excel.SRow;
-import seung.util.java.type.excel.SSheet;
+import seung.util.kimchi.type.SLinkedHashMap;
+import seung.util.kimchi.type.excel.SCell;
+import seung.util.kimchi.type.excel.SExcel;
+import seung.util.kimchi.type.excel.SRow;
+import seung.util.kimchi.type.excel.SSheet;
 
 @Slf4j
 public class SXlsx {

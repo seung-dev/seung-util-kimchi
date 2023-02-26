@@ -2,7 +2,7 @@ plugins {
 	id "java-library"
 }
 
-group = "seung-util"
+group = "seung"
 version = "1.0.0"
 
 [compileJava, compileTestJava, javadoc]*.options*.encoding = "UTF-8"
@@ -67,7 +67,7 @@ tasks.withType(JavaCompile) {
 
 /*
 tasks.withType(Jar) {
-	destinationDir = file("../../build/java")
+	destinationDir = file("../../build")
 	archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
 }
 */

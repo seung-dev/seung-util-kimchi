@@ -1,15 +1,18 @@
-package seung.util.java.type;
+package seung.util.kimchi.type;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import seung.util.java.SText;
+import seung.util.kimchi.SText;
 
 @Builder
 @Getter
 @Setter
 public class SEnv {
 
+	public String stringify() {
+		return stringify(false);
+	}
 	public String stringify(boolean is_pretty) {
 		return SText.stringify(this, is_pretty);
 	}

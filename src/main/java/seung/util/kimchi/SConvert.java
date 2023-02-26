@@ -1,9 +1,10 @@
-package seung.util.java;
+package seung.util.kimchi;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.DataFormatException;
@@ -24,7 +25,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import lombok.extern.slf4j.Slf4j;
-import seung.util.java.type.SLinkedHashMap;
+import seung.util.kimchi.type.SLinkedHashMap;
 
 @Slf4j
 public class SConvert {
@@ -114,6 +115,9 @@ public class SConvert {
 		return sLinkedHashMap;
 	}
 	
+	public static String encode_base64(byte[] data, Charset charset) {
+		return SText.to_text(Base64.encodeBase64(data), charset);
+	}
 	/**
 	 * <h1>Description</h1>
 	 * <pre>{@code
@@ -121,7 +125,7 @@ public class SConvert {
 	 * }</pre>
 	 * <h1>Usage</h1>
 	 * <pre>{@code
-	 * byte[] encoded = SConvert.encodeBase64(
+	 * byte[] encoded = SConvert.encode_base64(
 	 *   "data".getBytes()
 	 * );
 	 * for(byte b : encoded) {
@@ -139,6 +143,9 @@ public class SConvert {
 		return Base64.encodeBase64(data);
 	}
 	
+	public static String decode_base64(byte[] encoded, Charset charset) {
+		return SText.to_text(Base64.decodeBase64(encoded), charset);
+	}
 	/**
 	 * <h1>Description</h1>
 	 * <pre>{@code
@@ -164,6 +171,18 @@ public class SConvert {
 		return Base64.decodeBase64(encoded);
 	}
 	
+	public static String encode_hex(BigInteger data) {
+		return encode_hex(data.toByteArray(), true);
+	}
+	public static String encode_hex(String data) {
+		return encode_hex(data, StandardCharsets.UTF_8);
+	}
+	public static String encode_hex(String data, Charset charset) {
+		return encode_hex(data.getBytes(charset), true);
+	}
+	public static String encode_hex(byte[] data) {
+		return encode_hex(data, true);
+	}
 	/**
 	 * <h1>Description</h1>
 	 * <pre>{@code
@@ -171,7 +190,7 @@ public class SConvert {
 	 * }</pre>
 	 * <h1>Usage</h1>
 	 * <pre>{@code
-	 * String encoded = SConvert.encodeHexString(
+	 * String encoded = SConvert.encode_hex(
 	 *   "data".getBytes()
 	 * );
 	 * System.out.println(encoded);
@@ -182,16 +201,13 @@ public class SConvert {
 	 * @since 2020.12.21
 	 * @version 1.0.0
 	 */
-	public static String encode_hex(BigInteger data) {
-		return encode_hex(data.toByteArray(), true);
-	}
-	public static String encode_hex(byte[] data) {
-		return encode_hex(data, true);
-	}
 	public static String encode_hex(byte[] data, boolean to_lower_case) {
 		return Hex.encodeHexString(data, to_lower_case);
 	}
 	
+	public static String decode_hex(String encoded, Charset charset) {
+		return SText.to_text(decode_hex(encoded), charset);
+	}
 	/**
 	 * <h1>Description</h1>
 	 * <pre>{@code
@@ -199,7 +215,7 @@ public class SConvert {
 	 * }</pre>
 	 * <h1>Usage</h1>
 	 * <pre>{@code
-	 * byte[] decoded = SConvert.decodeHexString(
+	 * byte[] decoded = SConvert.decode_hex(
 	 *   "64617461"
 	 * );
 	 * for(byte b : decoded) {

@@ -1,21 +1,20 @@
-package seung.util.java.type;
+package seung.util.kimchi.type;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import seung.util.java.SText;
+import seung.util.kimchi.SText;
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
 @Getter
 public class SSignCertDer {
 
+	public String stringify() {
+		return stringify(false);
+	}
 	public String stringify(boolean is_pretty) {
 		return SText.stringify(this, is_pretty);
 	}

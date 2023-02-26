@@ -1,4 +1,4 @@
-package seung.util.java;
+package seung.util.kimchi;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -42,7 +42,7 @@ import org.bouncycastle.util.io.pem.PemReader;
 import org.bouncycastle.util.io.pem.PemWriter;
 
 import lombok.extern.slf4j.Slf4j;
-import seung.util.java.type.SLinkedHashMap;
+import seung.util.kimchi.type.SLinkedHashMap;
 
 @Slf4j
 public class SSecurity {

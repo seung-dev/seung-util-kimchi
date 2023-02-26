@@ -1,4 +1,4 @@
-package seung.util.java.type;
+package seung.util.kimchi.type;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import lombok.extern.slf4j.Slf4j;
-import seung.util.java.SConvert;
-import seung.util.java.SText;
+import seung.util.kimchi.SConvert;
+import seung.util.kimchi.SText;
 
 @SuppressWarnings("rawtypes")
 @Slf4j
@@ -26,6 +26,9 @@ public class SLinkedHashMap extends LinkedHashMap {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public String stringify() {
+		return stringify(false);
+	}
 	public String stringify(boolean is_pretty) {
 		return SText.stringify(this, is_pretty);
 	}
@@ -99,10 +102,10 @@ public class SLinkedHashMap extends LinkedHashMap {
 		return "" + get(key);
 	}
 	
-	public Boolean get_boolean(Object key) {
-		return get_boolean(key, null);
+	public Boolean get_bool(Object key) {
+		return get_bool(key, null);
 	}
-	public Boolean get_boolean(Object key, Boolean default_value) {
+	public Boolean get_bool(Object key, Boolean default_value) {
 		if(is_empty(key)) {
 			return default_value;
 		}

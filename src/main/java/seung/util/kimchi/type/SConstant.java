@@ -1,4 +1,4 @@
-package seung.util.java.type;
+package seung.util.kimchi.type;
 
 import java.nio.charset.Charset;
 

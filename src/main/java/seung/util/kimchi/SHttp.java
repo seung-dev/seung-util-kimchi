@@ -1,4 +1,4 @@
-package seung.util.java;
+package seung.util.kimchi;
 
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
