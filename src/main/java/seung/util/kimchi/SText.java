@@ -57,8 +57,8 @@ public class SText {
 	 * @since 2020.12.21
 	 * @version 1.0.0
 	 */
-	public static String uuid() {
-		return uuid("-", "");
+	public static String uuid(String regex, String replacement) {
+		return uuid().replaceAll(regex, replacement);
 	}
 	/**
 	 * <h1>Description</h1>
@@ -78,8 +78,8 @@ public class SText {
 	 * @since 2020.12.21
 	 * @version 1.0.0
 	 */
-	public static String uuid(String regex, String replacement) {
-		return UUID.randomUUID().toString().replaceAll(regex, replacement);
+	public static String uuid() {
+		return UUID.randomUUID().toString();
 	}
 	
 	public static int random(int min, int max) {

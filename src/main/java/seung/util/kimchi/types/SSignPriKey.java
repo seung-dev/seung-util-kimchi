@@ -3,20 +3,12 @@ package seung.util.kimchi.types;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import seung.util.kimchi.SText;
 
 @Builder
 @Setter
 @Getter
-public class SSignPriKey {
+public class SSignPriKey extends SType {
 
-	public String stringify() {
-		return stringify(false);
-	}
-	public String stringify(boolean is_pretty) {
-		return SText.stringify(this, is_pretty);
-	}
-	
 	private String private_key_algorythm_oid;
 	
 	private String encryption_algorithm_oid;

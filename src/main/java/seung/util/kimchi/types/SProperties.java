@@ -1,26 +1,16 @@
 package seung.util.kimchi.types;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import seung.util.kimchi.SText;
 
 @Builder
 @Getter
 @Setter
-public class SProperties {
+public class SProperties extends SType {
 
-	public String stringify() {
-		return stringify(false);
-	}
-	public String stringify(boolean is_pretty) {
-		return SText.stringify(this, is_pretty);
-	}
-	
 	@Builder.Default
 	private Properties environment = new Properties();
 	
@@ -28,7 +18,7 @@ public class SProperties {
 	private Properties build = new Properties();
 	
 	@Builder.Default
-	private List<Properties> datasource = new ArrayList<>();
+	private Properties datasource = new Properties();
 	
 	@Builder.Default
 	private Properties security = new Properties();

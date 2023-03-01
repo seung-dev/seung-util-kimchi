@@ -319,7 +319,7 @@ public class SHttp {
 	}
 	
 	public static String ipv4() throws InterruptedException, UnsupportedEncodingException {
-		return ipv4("restful.kr/public/ipv4");
+		return ipv4("http://public.restful.kr/ipv4");
 	}
 	public static String ipv4(String url) throws InterruptedException, UnsupportedEncodingException {
 		

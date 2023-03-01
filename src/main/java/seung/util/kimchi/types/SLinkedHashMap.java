@@ -70,9 +70,6 @@ public class SLinkedHashMap extends LinkedHashMap {
 		return keyList;
 	}
 	
-	public Object get(Object key) {
-		return get(key, null);
-	}
 	public Object get(Object key, Object default_value) {
 		return is_null(key) ? default_value : get(key);
 	}

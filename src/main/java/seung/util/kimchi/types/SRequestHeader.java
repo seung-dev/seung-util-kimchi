@@ -5,20 +5,12 @@ import java.util.Date;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import seung.util.kimchi.SText;
 
 @Builder
 @Setter
 @Getter
-public class SRequestHeader {
+public class SRequestHeader extends SType {
 
-	public String stringify() {
-		return stringify(false);
-	}
-	public String stringify(boolean is_pretty) {
-		return SText.stringify(this, is_pretty);
-	}
-	
 	@Builder.Default
 	private long request_time = new Date().getTime();
 	

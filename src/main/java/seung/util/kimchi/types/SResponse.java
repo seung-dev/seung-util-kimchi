@@ -13,15 +13,8 @@ import seung.util.kimchi.SText;
 @Builder
 @Getter
 @Setter
-public class SResponse {
+public class SResponse extends SType {
 
-	public String stringify() {
-		return stringify(false);
-	}
-	public String stringify(boolean is_pretty) {
-		return SText.stringify(this, is_pretty);
-	}
-	
 	@NotBlank
 	private String request_code;
 	
@@ -82,9 +75,10 @@ public class SResponse {
 		return this.error_code != SErrorCodeE.S000;
 	}
 	
-	public void done() {
+	public SResponse done() {
 		this.response_time = new Date().getTime();
 		this.elapsed_time = response_time - request_time;
+		return this;
 	}
 	
 }

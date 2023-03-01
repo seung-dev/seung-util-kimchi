@@ -5,20 +5,12 @@ import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import seung.util.kimchi.SText;
 
 @Builder
 @Setter
 @Getter
-public class SSignCertDer {
+public class SSignCertDer extends SType {
 
-	public String stringify() {
-		return stringify(false);
-	}
-	public String stringify(boolean is_pretty) {
-		return SText.stringify(this, is_pretty);
-	}
-	
 	private String type;
 	
 	private int version;

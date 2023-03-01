@@ -4,7 +4,9 @@ public enum SErrorCodeE {
 
 	S000("Success")
 	, F999("Fail")
-	, A200("토큰 검증 실패")
+	, A100("사용중인 이메일입니다.")
+	, A200("Token Verified")
+	, A299("토큰 검증 실패")
 	, A201("io.jsonwebtoken.security.SecurityException")
 	, A202("io.jsonwebtoken.MalformedJwtException")
 	, A203("io.jsonwebtoken.ExpiredJwtException")
