@@ -20,11 +20,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import lombok.extern.slf4j.Slf4j;
-import seung.util.kimchi.type.SLinkedHashMap;
-import seung.util.kimchi.type.excel.SCell;
-import seung.util.kimchi.type.excel.SExcel;
-import seung.util.kimchi.type.excel.SRow;
-import seung.util.kimchi.type.excel.SSheet;
+import seung.util.kimchi.types.SLinkedHashMap;
+import seung.util.kimchi.types.excel.SCell;
+import seung.util.kimchi.types.excel.SExcel;
+import seung.util.kimchi.types.excel.SRow;
+import seung.util.kimchi.types.excel.SSheet;
 
 @Slf4j
 public class SXlsx {

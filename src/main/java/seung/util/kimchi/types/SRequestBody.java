@@ -1,16 +1,17 @@
-package seung.util.kimchi.type.excel;
+package seung.util.kimchi.types;
 
 import java.io.Serializable;
 
-import lombok.Builder;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import lombok.Getter;
 import lombok.Setter;
 import seung.util.kimchi.SText;
 
-@Builder
 @Setter
 @Getter
-public class SCell implements Serializable {
+public class SRequestBody implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -21,10 +22,10 @@ public class SCell implements Serializable {
 		return SText.stringify(this, is_pretty);
 	}
 	
-	private int row_no;
+	@Size(max = 36)
+	@NotBlank
+	private String request_code;
 	
-	private int column_no;
-	
-	private String cell_text;
+	private SLinkedHashMap data;
 	
 }

@@ -1,4 +1,4 @@
-package seung.util.kimchi.type;
+package seung.util.kimchi.types;
 
 import java.util.ArrayList;
 import java.util.List;

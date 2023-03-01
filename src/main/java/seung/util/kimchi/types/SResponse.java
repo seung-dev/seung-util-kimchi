@@ -1,4 +1,4 @@
-package seung.util.kimchi.type;
+package seung.util.kimchi.types;
 
 import java.util.Date;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class SResponse {
 	private String request_code;
 	
 	@Builder.Default
-	private long request_time = -1l;
+	private long request_time = new Date().getTime();
 	
 	@Builder.Default
 	private long response_time = -1l;
@@ -35,7 +35,7 @@ public class SResponse {
 	private long elapsed_time = -1l;
 	
 	@Builder.Default
-	private String error_code = "E999";
+	private SErrorCodeE error_code = SErrorCodeE.H500;
 	
 	@Builder.Default
 	private String error_message = "";
@@ -58,14 +58,15 @@ public class SResponse {
 	}
 	
 	public void success() {
-		success("S000");
+		error(SErrorCodeE.S000);
 	}
 	
-	public void success(String error_code) {
+	public void error(SErrorCodeE error_code) {
 		this.error_code = error_code;
+		this.error_message = error_code.message;
 	}
 	
-	public void error_code(String error_code) {
+	public void error_code(SErrorCodeE error_code) {
 		this.error_code = error_code;
 	}
 	
@@ -77,13 +78,8 @@ public class SResponse {
 		error_message(SText.exception(exception));
 	}
 	
-	public void error(String error_code, String error_message) {
-		error_code(error_code);
-		error_message(error_message);
-	}
-	
 	public boolean has_error() {
-		return !"S000".equals(error_code);
+		return this.error_code != SErrorCodeE.S000;
 	}
 	
 	public void done() {

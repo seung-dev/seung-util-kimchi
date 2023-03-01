@@ -74,8 +74,8 @@ import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 
 import lombok.extern.slf4j.Slf4j;
-import seung.util.kimchi.type.SSignCertDer;
-import seung.util.kimchi.type.SSignPriKey;
+import seung.util.kimchi.types.SSignCertDer;
+import seung.util.kimchi.types.SSignPriKey;
 
 @Slf4j
 public class SCert {

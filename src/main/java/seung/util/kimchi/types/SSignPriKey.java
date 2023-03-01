@@ -1,4 +1,4 @@
-package seung.util.kimchi.type;
+package seung.util.kimchi.types;
 
 import lombok.Builder;
 import lombok.Getter;

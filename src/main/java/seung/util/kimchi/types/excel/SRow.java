@@ -1,17 +1,18 @@
-package seung.util.kimchi.type;
+package seung.util.kimchi.types.excel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import seung.util.kimchi.SText;
 
+@Builder
 @Setter
 @Getter
-public class SRequestBody implements Serializable {
+public class SRow implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -22,10 +23,9 @@ public class SRequestBody implements Serializable {
 		return SText.stringify(this, is_pretty);
 	}
 	
-	@Size(max = 36)
-	@NotBlank
-	private String request_code;
+	private int row_no;
 	
-	private SLinkedHashMap data;
+	@Builder.Default
+	private List<SCell> cells = new ArrayList<>();
 	
 }

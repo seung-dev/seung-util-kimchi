@@ -1,4 +1,4 @@
-package seung.util.kimchi.type.excel;
+package seung.util.kimchi.types.excel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import seung.util.kimchi.SText;
 @Builder
 @Setter
 @Getter
-public class SRow implements Serializable {
+public class SSheet implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -23,9 +23,11 @@ public class SRow implements Serializable {
 		return SText.stringify(this, is_pretty);
 	}
 	
-	private int row_no;
+	private String sheet_name;
+	
+	private int physical_number_of_rows;
 	
 	@Builder.Default
-	private List<SCell> cells = new ArrayList<>();
+	private List<SRow> rows = new ArrayList<>();
 	
 }

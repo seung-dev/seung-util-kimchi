@@ -25,7 +25,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
 import lombok.extern.slf4j.Slf4j;
-import seung.util.kimchi.type.SLinkedHashMap;
+import seung.util.kimchi.types.SLinkedHashMap;
 
 @Slf4j
 public class SConvert {

@@ -42,7 +42,7 @@ import org.bouncycastle.util.io.pem.PemReader;
 import org.bouncycastle.util.io.pem.PemWriter;
 
 import lombok.extern.slf4j.Slf4j;
-import seung.util.kimchi.type.SLinkedHashMap;
+import seung.util.kimchi.types.SLinkedHashMap;
 
 @Slf4j
 public class SSecurity {
@@ -798,7 +798,7 @@ public class SSecurity {
 			});
 			providers.add(new SLinkedHashMap()
 					.add("name", provider.getName())
-					.add("version", provider.getVersionStr())
+					.add("version", provider.getVersion())
 					.add("info", provider.getInfo())
 					.add("service", service)
 					);

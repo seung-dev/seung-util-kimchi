@@ -1,4 +1,4 @@
-package seung.util.kimchi.type.excel;
+package seung.util.kimchi.types.excel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
