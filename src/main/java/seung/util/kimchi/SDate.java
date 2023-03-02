@@ -59,6 +59,15 @@ public class SDate {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		return simpleDateFormat.parse(source);
 	}
+	public static Date to_date(String source, String pattern, Locale locale) throws ParseException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, locale);
+		return simpleDateFormat.parse(source);
+	}
+	public static Date to_date(String source, String pattern, Locale locale, TimeZone time_zone) throws ParseException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern, locale);
+		simpleDateFormat.setTimeZone(time_zone);
+		return simpleDateFormat.parse(source);
+	}
 	
 	public static int to_int() {
 		return Integer.parseInt(to_text("yyyyMMdd", new Date()).replaceAll("[^0-9]", ""));
