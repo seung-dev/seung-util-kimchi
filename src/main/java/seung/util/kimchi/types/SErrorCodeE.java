@@ -4,7 +4,11 @@ public enum SErrorCodeE {
 
 	S000("Success")
 	, F999("Fail")
-	, A100("사용중인 이메일입니다.")
+	, A000("사용할 수 없는 이메일입니다.")
+	, A100("인증에 실패하였습니다.")
+	, A110("계정이 비활성화 되었습니다. 관리자에게 문의하세요.")
+	, A120("비밀번호를 변경하세요.")
+	, A130("5회 이상 인증에 실패하였습니다. 관리자에게 문의하세요.")
 	, A200("Token is verified.")
 	, A299("토큰 검증이 실패하였습니다.")
 	, A201("io.jsonwebtoken.security.SecurityException")
