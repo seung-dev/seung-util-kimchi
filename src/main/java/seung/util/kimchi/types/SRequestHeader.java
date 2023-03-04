@@ -1,7 +1,5 @@
 package seung.util.kimchi.types;
 
-import java.util.Date;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,8 +9,11 @@ import lombok.Setter;
 @Getter
 public class SRequestHeader extends SType {
 
-	@Builder.Default
-	private long request_time = new Date().getTime();
+	private String uri_path;
+	
+	private String trace_id;
+	
+	private String remote_addr;
 	
 	@Builder.Default
 	private SLinkedHashMap header = new SLinkedHashMap();

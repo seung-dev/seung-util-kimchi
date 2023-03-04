@@ -1,6 +1,5 @@
 package seung.util.kimchi.types.excel;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +11,8 @@ import seung.util.kimchi.SText;
 @Builder
 @Setter
 @Getter
-public class SSheet implements Serializable {
+public class SSheet {
 
-	private static final long serialVersionUID = 1L;
-	
 	public String stringify() {
 		return stringify(false);
 	}

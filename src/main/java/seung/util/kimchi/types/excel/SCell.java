@@ -1,7 +1,5 @@
 package seung.util.kimchi.types.excel;
 
-import java.io.Serializable;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,10 +8,8 @@ import seung.util.kimchi.SText;
 @Builder
 @Setter
 @Getter
-public class SCell implements Serializable {
+public class SCell {
 
-	private static final long serialVersionUID = 1L;
-	
 	public String stringify() {
 		return stringify(false);
 	}

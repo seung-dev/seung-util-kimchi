@@ -1,6 +1,5 @@
 package seung.util.kimchi.types;
 
-import java.util.Date;
 import java.util.Map;
 
 import javax.validation.constraints.NotBlank;
@@ -16,10 +15,10 @@ import seung.util.kimchi.SText;
 public class SResponse extends SType {
 
 	@NotBlank
-	private String request_code;
+	private String trace_id;
 	
 	@Builder.Default
-	private long request_time = new Date().getTime();
+	private long request_time = System.currentTimeMillis();
 	
 	@Builder.Default
 	private long response_time = -1l;
@@ -76,7 +75,7 @@ public class SResponse extends SType {
 	}
 	
 	public SResponse done() {
-		this.response_time = new Date().getTime();
+		this.response_time = System.currentTimeMillis();
 		this.elapsed_time = response_time - request_time;
 		return this;
 	}
