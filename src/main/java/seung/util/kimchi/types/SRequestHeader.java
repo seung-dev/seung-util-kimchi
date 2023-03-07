@@ -15,6 +15,8 @@ public class SRequestHeader extends SType {
 	
 	private String remote_addr;
 	
+	private Object principal;
+	
 	@Builder.Default
 	private SLinkedHashMap header = new SLinkedHashMap();
 	
@@ -26,6 +28,10 @@ public class SRequestHeader extends SType {
 	
 	@Builder.Default
 	private SLinkedHashMap session = new SLinkedHashMap();
+	
+	public String principal() {
+		return this.principal.toString();
+	}
 	
 	public void header(String key, Object value) {
 		this.header.add(key, value);

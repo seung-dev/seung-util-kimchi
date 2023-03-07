@@ -27,7 +27,7 @@ public class SResponse extends SType {
 	private long elapsed_time = -1l;
 	
 	@Builder.Default
-	private SErrorCodeE error_code = SErrorCodeE.H500;
+	private String error_code = SError.FAIL.code();
 	
 	@Builder.Default
 	private String error_message = "";
@@ -50,15 +50,15 @@ public class SResponse extends SType {
 	}
 	
 	public void success() {
-		error(SErrorCodeE.S000);
+		error(SError.SUCCESS);
 	}
 	
-	public void error(SErrorCodeE error_code) {
-		this.error_code = error_code;
-		this.error_message = error_code.message;
+	public void error(SError s_error) {
+		this.error_code = s_error.code();
+		this.error_message = s_error.message();
 	}
 	
-	public void error_code(SErrorCodeE error_code) {
+	public void error_code(String error_code) {
 		this.error_code = error_code;
 	}
 	
@@ -71,7 +71,7 @@ public class SResponse extends SType {
 	}
 	
 	public boolean has_error() {
-		return this.error_code != SErrorCodeE.S000;
+		return this.error_code != SError.SUCCESS.code();
 	}
 	
 	public SResponse done() {
