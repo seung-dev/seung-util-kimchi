@@ -6,12 +6,19 @@ public class SResponseException extends RuntimeException {
 	
 	private final SResponse s_response;
 	
-	public SResponseException(SResponse s_response) {
+	private final Exception exception;
+	
+	public SResponseException(SResponse s_response, Exception exception) {
 		this.s_response = s_response;
+		this.exception = exception;
 	}
 	
 	public SResponse s_response() {
 		return this.s_response;
+	}
+	
+	public Exception exception() {
+		return this.exception;
 	}
 	
 	public String error_code() {

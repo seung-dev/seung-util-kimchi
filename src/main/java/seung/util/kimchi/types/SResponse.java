@@ -49,15 +49,6 @@ public class SResponse extends SType {
 		return this;
 	}
 	
-	public void success() {
-		error(SError.SUCCESS);
-	}
-	
-	public void error(SError s_error) {
-		this.error_code = s_error.code();
-		this.error_message = s_error.message();
-	}
-	
 	public void error_code(String error_code) {
 		this.error_code = error_code;
 	}
@@ -66,8 +57,17 @@ public class SResponse extends SType {
 		this.error_message = error_message;
 	}
 	
+	public void error(SError s_error) {
+		this.error_code(s_error.code());
+		this.error_message(s_error.message());
+	}
+	
+	public void success() {
+		this.error(SError.SUCCESS);
+	}
+	
 	public void exception(Exception exception) {
-		error_message(SText.exception(exception));
+		this.error_message(SText.exception(exception));
 	}
 	
 	public boolean has_error() {
@@ -78,6 +78,11 @@ public class SResponse extends SType {
 		this.response_time = System.currentTimeMillis();
 		this.elapsed_time = response_time - request_time;
 		return this;
+	}
+	
+	public SResponse done(SError s_error) {
+		this.error(s_error);
+		return this.done();
 	}
 	
 }
