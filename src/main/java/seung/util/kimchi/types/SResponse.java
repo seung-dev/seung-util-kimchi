@@ -10,8 +10,8 @@ import lombok.Setter;
 import seung.util.kimchi.SText;
 
 @Builder
-@Getter
 @Setter
+@Getter
 public class SResponse extends SType {
 
 	@NotBlank
