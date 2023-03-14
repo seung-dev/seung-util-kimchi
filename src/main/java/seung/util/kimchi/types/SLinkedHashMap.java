@@ -209,7 +209,7 @@ public class SLinkedHashMap extends LinkedHashMap {
 		if(value instanceof SLinkedHashMap) {
 			return (SLinkedHashMap) value;
 		}
-		throw new ClassCastException("Failed to cast to SLinkedHashMap.");
+		return new SLinkedHashMap(value);
 	}
 	
 	public List get_list(Object key) {
