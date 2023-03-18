@@ -15,6 +15,7 @@ public enum SError {
 	, TOKEN_IS_EXPIERED("A203", Category.ATHENTICATION, "io.jsonwebtoken.ExpiredJwtException")
 	, TOKEN_IS_UNSUPPORTED("A204", Category.ATHENTICATION, "io.jsonwebtoken.UnsupportedJwtException")
 	, TOKEN_IS_INVALID("A205", Category.ATHENTICATION, "io.jsonwebtoken.IllegalArgumentException")
+	, SIGNUP_FAILED("A300", Category.ATHENTICATION, "회원 등록이 실패하였습니다.")
 	, BAD_SQL("D100", Category.DATABASE, "org.springframework.jdbc.BadSqlGrammarException")
 	;
 	
