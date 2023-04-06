@@ -1,14 +1,17 @@
 package seung.util.kimchi.types;
 
+import javax.validation.constraints.NotNull;
+
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Builder
-@Setter
 @Getter
 public class SSignPriKey extends SType {
 
+	@NotNull
+	private byte[] encoded;
+	
 	private String private_key_algorythm_oid;
 	
 	private String encryption_algorithm_oid;

@@ -12,13 +12,12 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +28,6 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.io.FileUtils;
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Integer;
@@ -72,114 +70,17 @@ import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
+import org.bouncycastle.util.encoders.Hex;
 
 import lombok.extern.slf4j.Slf4j;
 import seung.util.kimchi.types.SSignCertDer;
 import seung.util.kimchi.types.SSignPriKey;
 
 @Slf4j
-public class SCert {
+public class SCertificate {
 
-	public SCert() {
-	}
-	
-	public static SSignCertDer s_sign_cert_der(
-			String path
-			) throws IOException {
-		return s_sign_cert_der(new File(path));
-	}
-	public static SSignCertDer s_sign_cert_der(
-			File file
-			) throws IOException {
-		return s_sign_cert_der(FileUtils.readFileToByteArray(file));
-	}
-	@SuppressWarnings("deprecation")
-	public static SSignCertDer s_sign_cert_der(
-			byte[] encoded
-			) {
-		
-		String type = "";
-		int version = 0;
-		String serial_number = "";
-		String signiture_algorithm_oid = "";
-		String signiture_algorithm_name = "";
-		String issuer_dn = "";
-		String subject_dn = "";
-		long not_before_epoch = 0;
-		String not_before_local = "";
-		long not_after_epoch = 0;
-		String not_after_local = "";
-		List<String> key_usage = new ArrayList<>();
-		String certificate_policy_oid = "";
-		String crl_distribution_point = "";
-		String subject_alternative_name_oid = "";
-		String vid_oid = "";
-		String vid_hash_algorithm_oid = "";
-		String vid = "";
-		
-		while(true) {
-			
-			X509Certificate x509_certificate = x509_certificate(encoded);
-			if(x509_certificate == null) {
-				break;
-			}
-			
-			type = x509_certificate.getType();
-			version = x509_certificate.getVersion();
-			serial_number = x509_certificate.getSerialNumber().toString();
-			signiture_algorithm_oid = x509_certificate.getSigAlgOID();
-			signiture_algorithm_name = x509_certificate.getSigAlgName();
-			issuer_dn = x509_certificate.getIssuerDN().getName();
-			subject_dn = x509_certificate.getSubjectDN().getName();
-			Date not_before = x509_certificate.getNotBefore();
-			not_before_epoch = not_before.getTime();
-			not_before_local = to_text(not_before, "yyyy-MM-dd HH:mm:ss");
-			Date not_after = x509_certificate.getNotAfter();
-			not_after_epoch = not_after.getTime();
-			not_after_local = to_text(not_after, "yyyy-MM-dd HH:mm:ss");
-			key_usage.addAll(key_usage(x509_certificate));
-			certificate_policy_oid = certificate_policy_oid(x509_certificate);
-			crl_distribution_point = crl_distribution_point(x509_certificate);
-			subject_alternative_name_oid = subject_alternative_name_oid(x509_certificate);
-			if(!"".equals(subject_alternative_name_oid)) {
-				vid_oid = vid_oid(x509_certificate);
-				vid_hash_algorithm_oid = vid_hash_algorithm_oid(x509_certificate);
-				vid = vid(x509_certificate);
-			}
-			
-			break;
-		}// end of while
-		
-		return SSignCertDer.builder()
-				.type(type)
-				.version(version)
-				.serial_number(serial_number)
-				.signiture_algorithm_oid(signiture_algorithm_oid)
-				.signiture_algorithm_name(signiture_algorithm_name)
-				.issuer_dn(issuer_dn)
-				.subject_dn(subject_dn)
-				.not_before_epoch(not_before_epoch)
-				.not_before_local(not_before_local)
-				.not_after_epoch(not_after_epoch)
-				.not_after_local(not_after_local)
-				.key_usage(key_usage)
-				.certificate_policy_oid(certificate_policy_oid)
-				.crl_distribution_point(crl_distribution_point)
-				.subject_alternative_name_oid(subject_alternative_name_oid)
-				.vid_oid(vid_oid)
-				.vid_hash_algorithm_oid(vid_hash_algorithm_oid)
-				.vid(vid)
-				.build()
-				;
-	}
-	
-	public static String to_text(Date date, String pattern) {
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-		return simpleDateFormat.format(date);
-	}
-	
 	public static X509Certificate x509_certificate(
-			byte[] encoded
+			final byte[] encoded
 			) {
 		X509Certificate x509_certificate = null;
 		try(
@@ -191,9 +92,11 @@ public class SCert {
 			log.error("Failed to convert to X509Certificate.", e);
 		}
 		return x509_certificate;
-	}
+	}// end of x509_certificate
 	
-	public static List<String> key_usage(X509Certificate x509_certificate) {
+	public static List<String> key_usage(
+			final X509Certificate x509_certificate
+			) {
 		
 		List<String> key_usage = new ArrayList<>();
 		
@@ -226,9 +129,11 @@ public class SCert {
 		}
 		
 		return key_usage;
-	}
+	}// end of key_usage
 	
-	public static String certificate_policy_oid(X509Certificate x509_certificate) {
+	public static String certificate_policy_oid(
+			final X509Certificate x509_certificate
+			) {
 		
 		String certificate_policy = "";
 		
@@ -248,48 +153,11 @@ public class SCert {
 		}
 		
 		return certificate_policy;
-	}
+	}// end of certificate_policy
 	
-	public static String crl_distribution_point(X509Certificate x509_certificate) {
-		
-		String crl_distribution_point = "";
-		
-		ASN1OctetString asn1OctetString = ASN1OctetString.getInstance(x509_certificate.getExtensionValue(Extension.cRLDistributionPoints.getId()));
-		
-		if(asn1OctetString == null) {
-			return crl_distribution_point;
-		}
-		
-		CRLDistPoint crlDistPoint = CRLDistPoint.getInstance(asn1OctetString.getOctets());
-		
-		for(DistributionPoint distributionPoint : crlDistPoint.getDistributionPoints()) {
-			
-			DistributionPointName distributionPointName = distributionPoint.getDistributionPoint();
-			
-			if(distributionPointName == null) {
-				continue;
-			}
-			if(DistributionPointName.FULL_NAME != distributionPointName.getType()) {
-				continue;
-			}
-			
-			for(GeneralName general_name : GeneralNames.getInstance(distributionPointName.getName()).getNames()) {
-				if(GeneralName.uniformResourceIdentifier != general_name.getTagNo()) {
-					continue;
-				}
-				crl_distribution_point = DERIA5String.getInstance(general_name.getName()).getString();
-				break;
-			}
-			
-			if(!"".equals(crl_distribution_point)) {
-				break;
-			}
-		}
-		
-		return crl_distribution_point;
-	}
-	
-	public static String subject_alternative_name_oid(X509Certificate x509_certificate) {
+	public static String subject_alternative_name_oid(
+			final X509Certificate x509_certificate
+			) {
 		
 		String subject_alternative_name_oid = "";
 		
@@ -328,9 +196,11 @@ public class SCert {
 		}
 		
 		return subject_alternative_name_oid;
-	}
+	}// end of subject_alternative_name_oid
 	
-	public static String vid_oid(X509Certificate x509_certificate) {
+	public static String vid_oid(
+			final X509Certificate x509_certificate
+			) {
 		
 		String vid_oid = "";
 		
@@ -364,9 +234,11 @@ public class SCert {
 		}
 		
 		return vid_oid;
-	}
+	}// end of vid_oid
 	
-	public static String vid_hash_algorithm_oid(X509Certificate x509_certificate) {
+	public static String vid_hash_algorithm_oid(
+			final X509Certificate x509_certificate
+			) {
 		
 		String vid_hash_algorithm_oid = "";
 		
@@ -400,9 +272,11 @@ public class SCert {
 		}
 		
 		return vid_hash_algorithm_oid;
-	}
+	}// end of vid_hash_algorithm_oid
 	
-	public static String vid(X509Certificate x509_certificate) {
+	public static String vid(
+			final X509Certificate x509_certificate
+			) {
 		
 		String vid = "";
 		
@@ -436,85 +310,158 @@ public class SCert {
 		}
 		
 		return vid;
-	}
+	}// end of vid
 	
-	public static SSignPriKey s_sign_pri_key(String path) throws IOException {
-		return s_sign_pri_key(new File(path));
-	}
-	public static SSignPriKey s_sign_pri_key(File file) throws IOException {
-		return s_sign_pri_key(FileUtils.readFileToByteArray(file));
-	}
-	public static SSignPriKey s_sign_pri_key(byte[] encoded) {
+	public static String crl_distribution_point(
+			final X509Certificate x509_certificate
+			) {
 		
-		String private_key_algorythm_oid = "";
+		String crl_distribution_point = "";
+		
+		ASN1OctetString asn1OctetString = ASN1OctetString.getInstance(x509_certificate.getExtensionValue(Extension.cRLDistributionPoints.getId()));
+		
+		if(asn1OctetString == null) {
+			return crl_distribution_point;
+		}
+		
+		CRLDistPoint crlDistPoint = CRLDistPoint.getInstance(asn1OctetString.getOctets());
+		
+		for(DistributionPoint distributionPoint : crlDistPoint.getDistributionPoints()) {
+			
+			DistributionPointName distributionPointName = distributionPoint.getDistributionPoint();
+			
+			if(distributionPointName == null) {
+				continue;
+			}
+			if(DistributionPointName.FULL_NAME != distributionPointName.getType()) {
+				continue;
+			}
+			
+			for(GeneralName general_name : GeneralNames.getInstance(distributionPointName.getName()).getNames()) {
+				if(GeneralName.uniformResourceIdentifier != general_name.getTagNo()) {
+					continue;
+				}
+				crl_distribution_point = DERIA5String.getInstance(general_name.getName()).getString();
+				break;
+			}
+			
+			if(!"".equals(crl_distribution_point)) {
+				break;
+			}
+		}
+		
+		return crl_distribution_point;
+	}// end of crl_distribution_point
+	
+	public static SSignCertDer s_sign_cert_der(
+			final byte[] encoded
+			) throws CertificateEncodingException {
+		
+		X509Certificate x509_certificate = x509_certificate(encoded);
+		if(x509_certificate == null) {
+			return null;
+		}
+		
+		String subject_alternative_name_oid = subject_alternative_name_oid(x509_certificate);
+		String vid_oid = "";
+		String vid_hash_algorithm_oid = "";
+		String vid = "";
+		if(!"".equals(subject_alternative_name_oid)) {
+			vid_oid = vid_oid(x509_certificate);
+			vid_hash_algorithm_oid = vid_hash_algorithm_oid(x509_certificate);
+			vid = vid(x509_certificate);
+		}
+		
+		return SSignCertDer.builder()
+				.encoded(encoded)
+				.type(x509_certificate.getType())
+				.version(x509_certificate.getVersion())
+				.serial_number(x509_certificate.getSerialNumber().toString())
+				.signiture_algorithm_oid(x509_certificate.getSigAlgOID())
+				.signiture_algorithm_name(x509_certificate.getSigAlgName())
+				.issuer_dn(x509_certificate.getIssuerDN().getName())
+				.subject_dn(x509_certificate.getSubjectDN().getName())
+				.not_before(x509_certificate.getNotBefore().getTime())
+				.not_after(x509_certificate.getNotAfter().getTime())
+				.key_usage(key_usage(x509_certificate))
+				.certificate_policy_oid(certificate_policy_oid(x509_certificate))
+				.subject_alternative_name_oid(subject_alternative_name_oid)
+				.vid_oid(vid_oid)
+				.vid_hash_algorithm_oid(vid_hash_algorithm_oid)
+				.vid(vid)
+				.crl_distribution_point(crl_distribution_point(x509_certificate))
+				.build()
+				;
+	}// end of s_sign_cert_der
+	public static SSignCertDer s_sign_cert_der(
+			final File file
+			) throws CertificateEncodingException, IOException {
+		return s_sign_cert_der(FileUtils.readFileToByteArray(file));
+	}// end of s_sign_cert_der
+	
+	public static SSignPriKey s_sign_pri_key(
+			final byte[] encoded
+			) {
+		
+		ASN1Sequence seq = ASN1Sequence.getInstance(encoded);
+		
+		ASN1Sequence seq_0 = ASN1Sequence.getInstance(seq.getObjectAt(0));
+		ASN1OctetString seq_1 = ASN1OctetString.getInstance(seq.getObjectAt(1));
+		byte[] private_key = seq_1.getOctets();
+		
+		ASN1ObjectIdentifier seq_0_0 = ASN1ObjectIdentifier.getInstance(seq_0.getObjectAt(0));
+		
+		String private_key_algorythm_oid = seq_0_0.getId();
+		
 		String encryption_algorithm_oid = "";
 		byte[] salt = null;
 		int iteration_count = 0;
 		int key_length = 0;
 		String prf_algorithm_oid = "";
 		byte[] iv = null;
-		byte[] private_key = null;
 		
-		while(true) {
-			
-			ASN1Sequence seq = ASN1Sequence.getInstance(encoded);
-			
-			ASN1Sequence seq_0 = ASN1Sequence.getInstance(seq.getObjectAt(0));
-			ASN1OctetString seq_1 = ASN1OctetString.getInstance(seq.getObjectAt(1));
-			private_key = seq_1.getOctets();
-			
-			ASN1ObjectIdentifier seq_0_0 = ASN1ObjectIdentifier.getInstance(seq_0.getObjectAt(0));
-			
-			private_key_algorythm_oid = seq_0_0.getId();
-			
+		if("1.2.840.113549.1.5.13".equals(private_key_algorythm_oid)) {
 			// pkcs5PBES2
 			// https://www.rfc-editor.org/rfc/rfc8018
-			if("1.2.840.113549.1.5.13".equals(private_key_algorythm_oid)) {
-				
-				ASN1Sequence seq_0_1 = ASN1Sequence.getInstance(seq_0.getObjectAt(1));
-				
-				ASN1Sequence seq_0_1_0 = ASN1Sequence.getInstance(seq_0_1.getObjectAt(0));
-				ASN1Sequence seq_0_1_1 = ASN1Sequence.getInstance(seq_0_1.getObjectAt(1));
-				
-				ASN1ObjectIdentifier seq_0_1_0_0 = ASN1ObjectIdentifier.getInstance(seq_0_1_0.getObjectAt(0));
-				encryption_algorithm_oid = seq_0_1_0_0.getId();
-				ASN1Sequence seq_0_1_0_1 = ASN1Sequence.getInstance(seq_0_1_0.getObjectAt(1));
-				
-				ASN1OctetString seq_0_1_0_1_0 = ASN1OctetString.getInstance(seq_0_1_0_1.getObjectAt(0));
-				salt = seq_0_1_0_1_0.getOctets();
-				ASN1Integer seq_0_1_0_1_1 = ASN1Integer.getInstance(seq_0_1_0_1.getObjectAt(1));
-				iteration_count = seq_0_1_0_1_1.intValueExact();
-				if(seq_0_1_0_1.size() > 2) {
-					ASN1Integer seq_0_1_0_0_1_2 = ASN1Integer.getInstance(seq_0_1_0_1.getObjectAt(2));
-					key_length = seq_0_1_0_0_1_2.intValueExact();
-				}
-				
-				ASN1ObjectIdentifier seq_0_1_1_0 = ASN1ObjectIdentifier.getInstance(seq_0_1_1.getObjectAt(0));
-				prf_algorithm_oid = seq_0_1_1_0.getId();
-				ASN1OctetString seq_0_1_1_1 = ASN1OctetString.getInstance(seq_0_1_1.getObjectAt(1));
-				iv = seq_0_1_1_1.getOctets();
-				
-				break;
+			
+			ASN1Sequence seq_0_1 = ASN1Sequence.getInstance(seq_0.getObjectAt(1));
+			
+			ASN1Sequence seq_0_1_0 = ASN1Sequence.getInstance(seq_0_1.getObjectAt(0));
+			ASN1Sequence seq_0_1_1 = ASN1Sequence.getInstance(seq_0_1.getObjectAt(1));
+			
+			ASN1ObjectIdentifier seq_0_1_0_0 = ASN1ObjectIdentifier.getInstance(seq_0_1_0.getObjectAt(0));
+			encryption_algorithm_oid = seq_0_1_0_0.getId();
+			ASN1Sequence seq_0_1_0_1 = ASN1Sequence.getInstance(seq_0_1_0.getObjectAt(1));
+			
+			ASN1OctetString seq_0_1_0_1_0 = ASN1OctetString.getInstance(seq_0_1_0_1.getObjectAt(0));
+			salt = seq_0_1_0_1_0.getOctets();
+			ASN1Integer seq_0_1_0_1_1 = ASN1Integer.getInstance(seq_0_1_0_1.getObjectAt(1));
+			iteration_count = seq_0_1_0_1_1.intValueExact();
+			if(seq_0_1_0_1.size() > 2) {
+				ASN1Integer seq_0_1_0_0_1_2 = ASN1Integer.getInstance(seq_0_1_0_1.getObjectAt(2));
+				key_length = seq_0_1_0_0_1_2.intValueExact();
 			}
 			
+			ASN1ObjectIdentifier seq_0_1_1_0 = ASN1ObjectIdentifier.getInstance(seq_0_1_1.getObjectAt(0));
+			prf_algorithm_oid = seq_0_1_1_0.getId();
+			ASN1OctetString seq_0_1_1_1 = ASN1OctetString.getInstance(seq_0_1_1.getObjectAt(1));
+			iv = seq_0_1_1_1.getOctets();
+			
+		} else if("1.2.410.200004.1.15".equals(private_key_algorythm_oid)) {
 			// seedCBCWithSHA1
 			// https://www.rfc-editor.org/rfc/rfc4269
-			if("1.2.410.200004.1.15".equals(private_key_algorythm_oid)) {
-				
-				ASN1Sequence seq_0_1 = ASN1Sequence.getInstance(seq_0.getObjectAt(1));
-				
-				ASN1OctetString seq_0_1_0 = ASN1OctetString.getInstance(seq_0_1.getObjectAt(0));
-				salt = seq_0_1_0.getOctets();
-				ASN1Integer seq_0_1_1 = ASN1Integer.getInstance(seq_0_1.getObjectAt(1));
-				iteration_count = seq_0_1_1.intValueExact();
-				
-				break;
-			}
 			
-			break;
-		}// end of while
+			ASN1Sequence seq_0_1 = ASN1Sequence.getInstance(seq_0.getObjectAt(1));
+			
+			ASN1OctetString seq_0_1_0 = ASN1OctetString.getInstance(seq_0_1.getObjectAt(0));
+			salt = seq_0_1_0.getOctets();
+			ASN1Integer seq_0_1_1 = ASN1Integer.getInstance(seq_0_1.getObjectAt(1));
+			iteration_count = seq_0_1_1.intValueExact();
+			
+		}// end of private_key_algorythm_oid
 		
 		return SSignPriKey.builder()
+				.encoded(encoded)
 				.private_key_algorythm_oid(private_key_algorythm_oid)
 				.encryption_algorithm_oid(encryption_algorithm_oid)
 				.salt(salt)
@@ -525,11 +472,21 @@ public class SCert {
 				.private_key(private_key)
 				.build()
 				;
-	}
+	}// end of s_sign_pri_key
+	public static SSignPriKey s_sign_pri_key(
+			final File file
+			) throws IOException {
+		return s_sign_pri_key(FileUtils.readFileToByteArray(file));
+	}// end of s_sign_pri_key
 	
-	public static byte[] decrypt_private_key(SSignPriKey s_sign_pri_key, String password) throws NoSuchAlgorithmException, UnsupportedEncodingException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+	public static byte[] decrypt_private_key(
+			final byte[] encoded
+			, final String secret
+			) throws NoSuchAlgorithmException, UnsupportedEncodingException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
 		
 		byte[] decrypted = null;
+		
+		SSignPriKey s_sign_pri_key = s_sign_pri_key(encoded);
 		
 		SecretKeySpec secretKeySpec = null;
 		IvParameterSpec ivParameterSpec = null;
@@ -541,7 +498,7 @@ public class SCert {
 				
 				PBEParametersGenerator pbeParametersGenerator = new PKCS5S2ParametersGenerator();
 				pbeParametersGenerator.init(
-						PBEParametersGenerator.PKCS5PasswordToBytes(password.toCharArray())//password
+						PBEParametersGenerator.PKCS5PasswordToBytes(secret.toCharArray())//password
 						, s_sign_pri_key.getSalt()//salt
 						, s_sign_pri_key.getIteration_count()//iterationCount
 						);
@@ -565,7 +522,7 @@ public class SCert {
 			if("1.2.410.200004.1.15".equals(s_sign_pri_key.getPrivate_key_algorythm_oid())) {
 				
 				MessageDigest message_digest_0 = MessageDigest.getInstance("SHA-1");
-				message_digest_0.update(password.getBytes("UTF-8"));
+				message_digest_0.update(secret.getBytes("UTF-8"));
 				message_digest_0.update(s_sign_pri_key.getSalt());
 				
 				byte[] digested_0 = message_digest_0.digest();
@@ -614,12 +571,72 @@ public class SCert {
 		decrypted = cipher.doFinal(s_sign_pri_key.getPrivate_key());
 		
 		return decrypted;
-	}
+	}// end of decrypt_private_key
 	
-	public static byte[] random_number(SSignPriKey s_sign_pri_key, String password) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
-		return random_number(decrypt_private_key(s_sign_pri_key, password));
-	}
-	public static byte[] random_number(byte[] encoded) throws IOException {
+	public static byte[] sign(
+			final byte[] sign_cert_der
+			, final byte[] sign_pri_key
+			, final String secret
+			, final byte[] message
+			) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, OperatorCreationException, CertificateException, IOException, CMSException {
+		
+		SSignCertDer s_sign_cert_der = s_sign_cert_der(sign_cert_der);
+		
+		byte[] decrypted = decrypt_private_key(sign_pri_key, secret);
+		
+		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+		PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decrypted));
+		
+		ContentSigner contentSigner = new JcaContentSignerBuilder(s_sign_cert_der.getSigniture_algorithm_name())
+				.setProvider(BouncyCastleProvider.PROVIDER_NAME)
+				.build(privateKey);
+		
+		JcaSignerInfoGeneratorBuilder jcaSignerInfoGeneratorBuilder = new JcaSignerInfoGeneratorBuilder(
+				new JcaDigestCalculatorProviderBuilder().setProvider(BouncyCastleProvider.PROVIDER_NAME).build()
+				);
+		SignerInfoGenerator infoGen = jcaSignerInfoGeneratorBuilder.build(contentSigner, s_sign_cert_der.x509_certificate());
+		final CMSAttributeTableGenerator cmsAttributeTableGenerator = infoGen.getSignedAttributeTableGenerator();
+		infoGen = new SignerInfoGenerator(
+				infoGen
+				, new DefaultAuthenticatedAttributeTableGenerator() {
+					@SuppressWarnings("rawtypes")
+					@Override
+					public AttributeTable getAttributes(Map parameters) {
+//							return super.getAttributes(parameters);
+						AttributeTable attributeTable = cmsAttributeTableGenerator.getAttributes(parameters);
+						return attributeTable.remove(CMSAttributes.cmsAlgorithmProtect);
+					}
+				}
+				, infoGen.getUnsignedAttributeTableGenerator()
+				);
+		
+		CMSSignedDataGenerator cmsSignedDataGenerator = new CMSSignedDataGenerator();
+		cmsSignedDataGenerator.addCertificate(new X509CertificateHolder(s_sign_cert_der.getEncoded()));
+		cmsSignedDataGenerator.addSignerInfoGenerator(infoGen);
+		
+		CMSTypedData cmsTypedData = new CMSProcessableByteArray(message);
+		
+		CMSSignedData cmsSignedData = cmsSignedDataGenerator.generate(cmsTypedData, true);
+		
+		return cmsSignedData.getEncoded("DER");
+	}// end of sign
+	public static byte[] sign(
+			final File sign_cert_der
+			, final File sign_pri_key
+			, final String secret
+			, final byte[] message
+			) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, OperatorCreationException, CertificateException, IOException, CMSException {
+		return sign(
+				FileUtils.readFileToByteArray(sign_cert_der)//s_sign_cert_der
+				, FileUtils.readFileToByteArray(sign_pri_key)//s_sign_pri_key
+				, secret
+				, message
+				);
+	}// end of sign
+	
+	public static byte[] random_number(
+			final byte[] encoded
+			) throws IOException {
 		
 		byte[] random_number = null;
 		
@@ -662,9 +679,19 @@ public class SCert {
 		}
 		
 		return random_number;
-	}
+	}// end of random_number
+	public static byte[] random_number(
+			final SSignPriKey s_sign_pri_key
+			, final String secret
+			) throws InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
+		return random_number(decrypt_private_key(s_sign_pri_key.getEncoded(), secret));
+	}// end of random_number
 	
-	public static byte[] generate_vid(String rrn, byte[] random_number, String algorithm) throws IOException {
+	public static byte[] generate_vid(
+			String rrn
+			, byte[] random_number
+			, String algorithm
+			) throws IOException {
 		
 		DERSequence derSequence = new DERSequence(new ASN1Encodable[] {
 				new DERPrintableString(rrn)
@@ -673,55 +700,28 @@ public class SCert {
 		
 		byte[] digested = SSecurity.digest(algorithm, derSequence.getEncoded());
 		return SSecurity.digest(algorithm, digested);
-	}
+	}// end of generate_vid
 	
 	public static int verify_vid(
-			String sign_cert_der
-			, String sign_pri_key
-			, String password
-			, String rrn
-			) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-		return verify_vid(
-				new File(sign_cert_der)//sign_cert_der
-				, new File(sign_pri_key)//sign_pri_key
-				, password
-				, rrn
-				);
-	}
-	public static int verify_vid(
-			File sign_cert_der
-			, File sign_pri_key
-			, String password
-			, String rrn
-			) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-		return verify_vid(
-				FileUtils.readFileToByteArray(sign_cert_der)//sign_cert_der
-				, FileUtils.readFileToByteArray(sign_pri_key)//sign_pri_key
-				, password
-				, rrn
-				);
-	}
-	public static int verify_vid(
-			byte[] sign_cert_der
-			, byte[] sign_pri_key
-			, String password
-			, String rrn
-			) throws IOException, InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
+			final byte[] sign_cert_der
+			, final byte[] sign_pri_key
+			, final String secret
+			, final String rrn
+			) throws CertificateEncodingException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
 		
 		int verify_vid = 0;
 		
 		SSignCertDer s_sign_cert_der = s_sign_cert_der(sign_cert_der);
 		SSignPriKey s_sign_pri_key = s_sign_pri_key(sign_pri_key);
-		byte[] random_number = random_number(s_sign_pri_key, password);
+		byte[] random_number = random_number(s_sign_pri_key, secret);
 		
 		String sign_cert_der_vid = s_sign_cert_der.getVid();
-		String generate_vid = Hex.encodeHexString(
+		String generate_vid = Hex.toHexString(
 				generate_vid(
 						rrn
 						, random_number
 						, s_sign_cert_der.getVid_hash_algorithm_oid()//algorithm
 						)
-				, true
 				);
 		
 		if(sign_cert_der_vid.equals(generate_vid)) {
@@ -729,82 +729,19 @@ public class SCert {
 		}
 		
 		return verify_vid;
-	}
-	
-	public static byte[] sign(
-			String sign_cert_der
-			, String sign_pri_key
-			, String password
-			, byte[] message
-			) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, OperatorCreationException, CertificateEncodingException, CMSException, IOException {
-		return sign(
-				new File(sign_cert_der)//sign_cert_der
-				, new File(sign_pri_key)//sign_pri_key
-				, password
-				, message
-				);
-	}
-	public static byte[] sign(
-			File sign_cert_der
-			, File sign_pri_key
-			, String password
-			, byte[] message
-			) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, OperatorCreationException, CertificateEncodingException, CMSException, IOException {
-		return sign(
+	}// end of verify_vid
+	public static int verify_vid(
+			final File sign_cert_der
+			, final File sign_pri_key
+			, final String secret
+			, final String rrn
+			) throws CertificateEncodingException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException {
+		return verify_vid(
 				FileUtils.readFileToByteArray(sign_cert_der)//sign_cert_der
 				, FileUtils.readFileToByteArray(sign_pri_key)//sign_pri_key
-				, password
-				, message
+				, secret
+				, rrn
 				);
-	}
-	public static byte[] sign(
-			byte[] sign_cert_der
-			, byte[] sign_pri_key
-			, String password
-			, byte[] message
-			) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, InvalidKeySpecException, OperatorCreationException, CertificateEncodingException, CMSException, IOException {
-		
-		X509Certificate x509_certificate = x509_certificate(sign_cert_der);
-		SSignCertDer s_sign_cert_der = s_sign_cert_der(sign_cert_der);
-		
-		SSignPriKey s_sign_pri_key = s_sign_pri_key(sign_pri_key);
-		byte[] decrypted = decrypt_private_key(s_sign_pri_key, password);
-		
-		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-		PrivateKey privateKey = keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decrypted));
-		
-		ContentSigner contentSigner = new JcaContentSignerBuilder(s_sign_cert_der.getSigniture_algorithm_name())
-				.setProvider(BouncyCastleProvider.PROVIDER_NAME)
-				.build(privateKey);
-		
-		JcaSignerInfoGeneratorBuilder jcaSignerInfoGeneratorBuilder = new JcaSignerInfoGeneratorBuilder(
-				new JcaDigestCalculatorProviderBuilder().setProvider(BouncyCastleProvider.PROVIDER_NAME).build()
-				);
-		SignerInfoGenerator infoGen = jcaSignerInfoGeneratorBuilder.build(contentSigner, x509_certificate);
-		final CMSAttributeTableGenerator cmsAttributeTableGenerator = infoGen.getSignedAttributeTableGenerator();
-		infoGen = new SignerInfoGenerator(
-				infoGen
-				, new DefaultAuthenticatedAttributeTableGenerator() {
-					@SuppressWarnings("rawtypes")
-					@Override
-					public AttributeTable getAttributes(Map parameters) {
-//							return super.getAttributes(parameters);
-						AttributeTable attributeTable = cmsAttributeTableGenerator.getAttributes(parameters);
-						return attributeTable.remove(CMSAttributes.cmsAlgorithmProtect);
-					}
-				}
-				, infoGen.getUnsignedAttributeTableGenerator()
-				);
-		
-		CMSSignedDataGenerator cmsSignedDataGenerator = new CMSSignedDataGenerator();
-		cmsSignedDataGenerator.addCertificate(new X509CertificateHolder(x509_certificate.getEncoded()));
-		cmsSignedDataGenerator.addSignerInfoGenerator(infoGen);
-		
-		CMSTypedData cmsTypedData = new CMSProcessableByteArray(message);
-		
-		CMSSignedData cmsSignedData = cmsSignedDataGenerator.generate(cmsTypedData, true);
-		
-		return cmsSignedData.getEncoded("DER");
-	}
+	}// end of verify_vid
 	
 }

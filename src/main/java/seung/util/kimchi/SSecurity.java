@@ -81,6 +81,18 @@ public class SSecurity {
 		return algorithms;
 	}
 	
+	public static String algorithm_name(
+			String algorithm
+			, String provider
+			) throws NoSuchAlgorithmException, NoSuchProviderException {
+		return MessageDigest.getInstance(algorithm, provider).getAlgorithm();
+	}
+	public static String algorithm_name(
+			String algorithm
+			) throws NoSuchAlgorithmException, NoSuchProviderException {
+		return algorithm_name(algorithm, BouncyCastleProvider.PROVIDER_NAME);
+	}
+	
 	public static byte[] xxtea_encrypt(String key, String plain_text) {
 		byte[] key_bytes = key.getBytes();
 		byte[] plain_text_bytes = plain_text.getBytes();
