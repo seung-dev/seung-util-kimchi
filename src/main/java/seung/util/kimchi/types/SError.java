@@ -5,6 +5,7 @@ public enum SError {
 	SUCCESS("S000", Category.SUCCESS, "Success")
 	, FAIL("F999", Category.EXCEPTION, "요청이 실패하였습니다. 관리자에게 문의하세요.")
 	, EMAIL_IS_NOT_AVAILABLE("A010", Category.ATHENTICATION, "사용할 수 없는 이메일입니다.")
+	, OAUTH2_IS_NOT_AVAILABLE("A020", Category.ATHENTICATION, "사용할 수 없는 계정입니다.")
 	, SIGNIN_FAILED("A100", Category.ATHENTICATION, "인증에 실패하였습니다.")
 	, SIGNIN_DISABLED("A110", Category.ATHENTICATION, "계정이 비활성화 되었습니다. 관리자에게 문의하세요.")
 	, PASSWORD_EXPIERED("A120", Category.ATHENTICATION, "비밀번호를 변경하세요.")
