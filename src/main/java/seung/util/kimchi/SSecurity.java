@@ -301,7 +301,11 @@ public class SSecurity {
 				cipher = Cipher.getInstance(transformation);
 			}
 			
-			cipher.init(Cipher.ENCRYPT_MODE, key, algorithm_parameter_spec);
+			if(algorithm_parameter_spec != null) {
+				cipher.init(Cipher.ENCRYPT_MODE, key, algorithm_parameter_spec);
+			} else {
+				cipher.init(Cipher.ENCRYPT_MODE, key);
+			}
 			
 			encrypted = cipher.doFinal(data);
 			
@@ -339,6 +343,9 @@ public class SSecurity {
 	public static AlgorithmParameterSpec iv_parameter_spec(
 			byte[] iv
 			) {
+		if(iv == null) {
+			return null;
+		}
 		return new IvParameterSpec(iv);
 	}
 	/**
@@ -476,7 +483,11 @@ public class SSecurity {
 				cipher = Cipher.getInstance(transformation);
 			}
 			
-			cipher.init(Cipher.DECRYPT_MODE, key, algorithm_parameter_spec);
+			if(algorithm_parameter_spec != null) {
+				cipher.init(Cipher.DECRYPT_MODE, key, algorithm_parameter_spec);
+			} else {
+				cipher.init(Cipher.DECRYPT_MODE, key);
+			}
 			
 			decrypted = cipher.doFinal(encrypted);
 			
