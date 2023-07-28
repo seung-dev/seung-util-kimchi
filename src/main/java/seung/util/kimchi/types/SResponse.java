@@ -4,8 +4,6 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.constraints.NotBlank;
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,17 +14,16 @@ import seung.util.kimchi.SText;
 @Getter
 public class SResponse extends SType {
 
-	@NotBlank
 	private String trace_id;
 	
 	@Builder.Default
 	private long request_time = System.currentTimeMillis();
 	
 	@Builder.Default
-	private long response_time = -1l;
+	private long response_time = -1L;
 	
 	@Builder.Default
-	private long elapsed_time = -1l;
+	private long elapsed_time = -1L;
 	
 	@Builder.Default
 	private String error_code = SError.FAIL.code();
@@ -36,6 +33,18 @@ public class SResponse extends SType {
 	
 	@Builder.Default
 	private SLinkedHashMap data = new SLinkedHashMap();
+	
+	public SResponse parse(String json_format_string) {
+		SLinkedHashMap response = new SLinkedHashMap(json_format_string);
+		this.trace_id = response.get_text("trace_id");
+		this.request_time = response.get_long("request_time");
+		this.response_time = response.get_long("response_time");
+		this.elapsed_time = response.get_long("elapsed_time");
+		this.error_code = response.get_text("error_code");
+		this.error_message = response.get_text("error_message");
+		this.data = response.get_slinkedhashmap("error_message");
+		return this;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public SResponse add(Object key, Object value) {
