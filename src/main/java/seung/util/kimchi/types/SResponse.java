@@ -1,5 +1,7 @@
 package seung.util.kimchi.types;
 
+import java.math.BigInteger;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.constraints.NotBlank;
@@ -71,7 +73,7 @@ public class SResponse extends SType {
 	}
 	
 	public boolean has_error() {
-		return this.error_code != SError.SUCCESS.code();
+		return !SError.SUCCESS.code().equals(this.error_code);
 	}
 	
 	public SResponse done() {
@@ -83,6 +85,46 @@ public class SResponse extends SType {
 	public SResponse done(SError s_error) {
 		this.error(s_error);
 		return this.done();
+	}
+	
+	public String get_text(String key, String default_value) {
+		return this.data.get_text(key, default_value);
+	}
+	
+	public Integer get_int(String key, Integer default_value) {
+		return this.data.get_int(key, default_value);
+	}
+	
+	public Long get_long(String key, Long default_value) {
+		return this.data.get_long(key, default_value);
+	}
+	
+	public BigInteger get_bigint(String key, BigInteger default_value) {
+		return this.data.get_bigint(key, default_value);
+	}
+	
+	public Double get_double(String key, Double default_value) {
+		return this.data.get_double(key, default_value);
+	}
+	
+	public SLinkedHashMap get_slinkedhashmap(String key) {
+		return this.data.get_slinkedhashmap(key);
+	}
+	
+	public List<SLinkedHashMap> get_list_slinkedhashmap(String key) {
+		return this.data.get_list_slinkedhashmap(key);
+	}
+	
+	public String[] get_array_string(String key) {
+		return this.data.get_array_string(key);
+	}
+	
+	public List<String> get_list_string(String key) {
+		return this.data.get_list_string(key);
+	}
+	
+	public byte[] get_byte_array(String key) {
+		return this.data.get_byte_array(key);
 	}
 	
 }
