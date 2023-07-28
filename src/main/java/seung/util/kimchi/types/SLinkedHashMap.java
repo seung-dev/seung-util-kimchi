@@ -201,7 +201,7 @@ public class SLinkedHashMap extends LinkedHashMap {
 		throw new ClassCastException("Failed to cast to Map.");
 	}
 	
-	public SLinkedHashMap get_slinkedHashMap(Object key) {
+	public SLinkedHashMap get_slinkedhashmap(Object key) {
 		if(is_null(key)) {
 			return null;
 		}
