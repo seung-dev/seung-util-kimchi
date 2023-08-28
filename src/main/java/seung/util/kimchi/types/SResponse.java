@@ -42,7 +42,7 @@ public class SResponse extends SType {
 		this.elapsed_time = response.get_long("elapsed_time");
 		this.error_code = response.get_text("error_code");
 		this.error_message = response.get_text("error_message");
-		this.data = response.get_slinkedhashmap("error_message");
+		this.data = response.get_slinkedhashmap("data");
 		return this;
 	}
 	
