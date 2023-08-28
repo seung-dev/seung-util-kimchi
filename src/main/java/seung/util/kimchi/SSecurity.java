@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -29,6 +30,7 @@ import java.util.List;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.Mac;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.OAEPParameterSpec;
@@ -834,5 +836,36 @@ public class SSecurity {
 			Security.addProvider(new BouncyCastleProvider());
 		}
 	}
+	
+	public static byte[] mac(
+			String algorithm
+			, String provider
+			, byte[] key
+			, byte[] message
+			) throws NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException {
+		
+		Mac mac = null;
+		
+		if(provider != null) {
+			mac = Mac.getInstance(algorithm, provider);
+		} else {
+			mac = Mac.getInstance(algorithm);
+		}
+		
+		SecretKeySpec secretKeySpec = new SecretKeySpec(key, algorithm);
+		
+		mac.init(secretKeySpec);
+		
+		return mac.doFinal(message);
+	}// end of mac
+	public static byte[] mac(
+			String algorithm
+			, String provider
+			, String key
+			, String message
+			, Charset charset
+			) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchProviderException {
+		return mac(algorithm, provider, key.getBytes(charset), message.getBytes(charset));
+	}// end of mac
 	
 }
